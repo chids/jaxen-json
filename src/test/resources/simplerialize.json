@@ -1,0 +1,15 @@
+{
+    "root":
+    {
+        "objects":
+        [
+            {"foo":"bar"},
+            {"bar":"baz"}
+        ],
+        "primitives": [ "1", 1, true ],
+        "a":
+        {
+            "b": { "name":"value" }
+        }
+    }
+}

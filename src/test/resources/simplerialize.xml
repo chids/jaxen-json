@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<root>
+    <objects foo="bar" bar="baz" />
+    <primitives>
+        <value>1</value>
+        <value>1</value>
+        <value>true</value>
+    </primitives>
+    <a>
+        <b name="value" />
+    </a>
+</root>
