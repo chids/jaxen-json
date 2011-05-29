@@ -126,7 +126,6 @@ public final class JsonNavigator implements NamedAccessNavigator
     public boolean isElement(final Object contextNode)
     {
         System.err.println("isElement: " + contextNode);
-        //return (contextNode instanceof JsonNode) ? ((JsonNode)contextNode).isContainerNode() : false;
         return (contextNode instanceof JsonNode) ? ((JsonNode)contextNode).isValueNode() : false;
     }
 
@@ -162,11 +161,7 @@ public final class JsonNavigator implements NamedAccessNavigator
     public Iterator<?> getAttributeAxisIterator(final Object contextNode) throws UnsupportedAxisException
     {
         System.err.println("getAttributeAxisIterator: " + contextNode);
-        if(contextNode instanceof JsonNode)
-        {
-            return ((JsonNode)contextNode).getElements();
-        }
-        return null;
+        return (contextNode instanceof JsonNode) ? ((JsonNode)contextNode).getElements() : null;
     }
 
     @Override
