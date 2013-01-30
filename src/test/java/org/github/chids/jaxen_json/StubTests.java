@@ -1,60 +1,54 @@
-package se.pp.gustafson.marten;
+package org.github.chids.jaxen_json;
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.Iterator;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.JsonNodeFactory;
-import org.codehaus.jackson.node.TextNode;
+import org.github.chids.jaxen_json.JaxenJson;
 import org.junit.Before;
 import org.junit.Test;
 
 
-public final class StubTests
-{
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.TextNode;
+
+public final class StubTests {
+
     @Test
-    public void firstLevelPath() throws Exception
-    {
+    public void firstLevelPath() throws Exception {
         test("//name", this.nodes.get("person").get("name"));
     }
 
     @Test
-    public void twoLevelPath() throws Exception
-    {
-        
+    public void twoLevelPath() throws Exception {
         test("/person/name/first", new TextNode("mårten"));
     }
 
     @Test
-    public void threeLevelPath() throws Exception
-    {
+    public void threeLevelPath() throws Exception {
         test("/person/name/last", new TextNode("gustafson"));
     }
 
     @Test
-    public void array() throws Exception
-    {
+    public void array() throws Exception {
         final ArrayNode array = new ArrayNode(JsonNodeFactory.instance);
         array.add(new TextNode("whiskey"));
         array.add(new TextNode("beer"));
         array.add(new TextNode("water"));
         test("/drinks", array);
     }
-    
+
     @Test
-    public void attributeWildcardWithIndex() throws Exception
-    {
+    public void attributeWildcardWithIndex() throws Exception {
         test("/drinks/@*[2]", new TextNode("beer"));
     }
 
-    public void test(final String expression, final JsonNode... expected) throws Exception
-    {
+    public void test(final String expression, final JsonNode... expected) throws Exception {
         final Iterator<?> actual = new JaxenJson(expression).selectNodes(this.nodes).iterator();
-        for(final Object value : expected)
-        {
+        for(final Object value : expected) {
             final Object next = actual.next();
             assertEquals("Class", value.getClass().getSimpleName(), next.getClass().getSimpleName());
             assertEquals(expression, value, next);
@@ -62,8 +56,7 @@ public final class StubTests
     }
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         this.nodes = new ObjectMapper().readValue(json, JsonNode.class);
     }
 

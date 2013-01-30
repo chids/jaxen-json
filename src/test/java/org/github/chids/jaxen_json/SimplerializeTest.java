@@ -1,4 +1,4 @@
-package se.pp.gustafson.marten;
+package org.github.chids.jaxen_json;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -10,66 +10,60 @@ import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Node;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
+import org.github.chids.jaxen_json.JaxenJson;
 import org.jaxen.JaxenException;
 import org.jaxen.xom.XOMXPath;
 import org.junit.Before;
 import org.junit.Test;
 
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * Do some basic tests against JSON and XML output from
  * <a href="https://github.com/Hitta/simplerialize">simplerialize</a>.
  */
-public final class SimplerializeTest
-{
+public final class SimplerializeTest {
 
     @Test
-    public void pathToNamedKeyValue() throws Exception
-    {
+    public void pathToNamedKeyValue() throws Exception {
         test("/root/objects/@foo", "bar");
         test("/root/objects/@bar", "baz");
         test("/root/a/b/@name", "value");
     }
 
     @Test
-    public void pathToEntryListWithIndex() throws Exception
-    {
+    public void pathToEntryListWithIndex() throws Exception {
         test("/root/primitives/*[3]", "true");
     }
 
-    public void test(final String expression, final String... expected) throws Exception
-    {
+    public void test(final String expression, final String... expected) throws Exception {
         final Iterator<?> xml = xml(expression);
         final Iterator<?> json = json(expression);
         assertTrue("xml, no match: " + expression, xml.hasNext());
         assertTrue("json, no match: " + expression, json.hasNext());
-        for(final Object value : expected)
-        {
+        for(final Object value : expected) {
             assertEquals("xml", value, ((Node)xml.next()).getValue());
-            assertEquals("json", value, ((JsonNode)json.next()).getValueAsText());
+            assertEquals("json", value, ((JsonNode)json.next()).asText());
         }
     }
 
-    private Iterator<?> json(final String expression) throws JaxenException
-    {
+    private Iterator<?> json(final String expression) throws JaxenException {
         return new JaxenJson(expression).selectNodes(this.json).iterator();
     }
 
-    private Iterator<?> xml(final String expression) throws JaxenException
-    {
+    private Iterator<?> xml(final String expression) throws JaxenException {
         return new XOMXPath(expression).selectNodes(this.xml).iterator();
     }
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         this.json = new ObjectMapper().readValue(load("simplerialize.json"), JsonNode.class);
         this.xml = new Builder().build(load("simplerialize.xml"));
     }
 
-    public InputStream load(final String name)
-    {
+    public InputStream load(final String name) {
         return getClass().getClassLoader().getResourceAsStream(name);
     }
 
